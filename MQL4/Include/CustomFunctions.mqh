@@ -74,19 +74,41 @@ double GetPipValue(string ThisSymbol)
    }
 }
 
+double GetMovingAverage(string ThisSymbol)
+{
+   int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
+   
+   double ThisIma = iMA(ThisSymbol, PERIOD_CURRENT, 20, 0, MODE_SMA, PRICE_CLOSE, 0);
+   
+   return NormalizeDouble(ThisIma, TheseDigits);
+
+}
+
 
 int GetMagicNumber(string ThisSymbol)
 {
-   string result = "";
-   for(int i=0;i<StringLen(ThisSymbol);i++)
-   {
-      Print(StringGetChar(ThisSymbol,i));    
-      result=result+StringGetChar(ThisSymbol,i);
+   
+   bool x =  StringToUpper(ThisSymbol);
       
    
+   //Remove all other characters  
+   for(int i=0;i<255;i++)
+   {
+      if ((i < 65) || (i > 90))
+      {
+         StringReplace(ThisSymbol,CharToString(i),"");
+      }     
    }
-   Print("Result " + result);
-   return StrToInteger(result); 
+    
+   for(int i=0;i<26;i++)
+   {
+      StringReplace(ThisSymbol,CharToString(i+65),i+1);   
+   }
+   
+   ThisSymbol = StringSubstr(ThisSymbol,0,9);
+   
+   
+   return StrToInteger(ThisSymbol); 
 
 }
 
