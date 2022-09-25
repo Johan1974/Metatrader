@@ -2,7 +2,7 @@
 id=132772896699014290
 symbol=EURUSD
 period=1
-leftpos=5984
+leftpos=6100
 digits=5
 scale=8
 graph=1
@@ -23,7 +23,7 @@ window_left=0
 window_top=0
 window_right=1276
 window_bottom=692
-window_type=3
+window_type=1
 background_color=16777215
 foreground_color=0
 barup_color=65280
@@ -94,18 +94,6 @@ hidden=0
 zorder=0
 value_0=0.996676
 </object>
-</indicator>
-<indicator>
-name=Bollinger Bands
-period=20
-shift=0
-deviations=2.000000
-apply=0
-color=7451452
-style=0
-weight=1
-period_flags=0
-show_data=1
 </indicator>
 <indicator>
 name=Custom Indicator
