@@ -12,7 +12,7 @@
 //+------------------------------------------------------------------+
 
 int maPeriod = 20;
-string ThisSymbol = "CARDANO";
+string ThisSymbol = "ETHEREUM";
 
 void OnStart()
   {
@@ -22,11 +22,14 @@ void OnStart()
 int digits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
 
 double maValue = iMA(ThisSymbol, PERIOD_CURRENT, maPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
+double ThisBB = iBands(ThisSymbol,PERIOD_CURRENT, maPeriod, 2, 0, PRICE_CLOSE, MODE_LOWER, 0);
 
 Print("*****");
 Print("Digits1    :  " + Digits );
 Print("Digits2    :  " + digits );
-Print("Normalize  :  " + NormalizeDouble( maValue, digits ));    
+Print("Normalize MA  :  " + NormalizeDouble( maValue, digits ));    
+Print("Normalize BB :  " + NormalizeDouble( ThisBB , digits ));    
+
 Print("*****");
 
 //return NormalizeDouble(ThisIma, digits);

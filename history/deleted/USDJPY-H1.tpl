@@ -1,9 +1,9 @@
 <chart>
-id=132772896699014293
-symbol=EURUSD
+id=132772896699014292
+symbol=USDJPY
 period=60
-leftpos=7521
-digits=5
+leftpos=1964
+digits=3
 scale=8
 graph=1
 fore=0
@@ -23,7 +23,7 @@ window_left=0
 window_top=0
 window_right=832
 window_bottom=440
-window_type=1
+window_type=3
 background_color=16777215
 foreground_color=0
 barup_color=0
@@ -41,18 +41,6 @@ height=100
 fixed_height=0
 <indicator>
 name=main
-</indicator>
-<indicator>
-name=Bollinger Bands
-period=20
-shift=0
-deviations=2.000000
-apply=0
-color=7451452
-style=0
-weight=1
-period_flags=0
-show_data=1
 </indicator>
 </window>
 </chart>

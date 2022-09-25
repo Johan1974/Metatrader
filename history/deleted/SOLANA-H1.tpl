@@ -1,9 +1,9 @@
 <chart>
-id=132772896699014297
-symbol=USDJPY
+id=132772896699014298
+symbol=SOLANA
 period=60
 leftpos=1937
-digits=5
+digits=3
 scale=8
 graph=1
 fore=1

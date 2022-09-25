@@ -1,9 +1,9 @@
 <chart>
-id=132772896699014297
-symbol=USDJPY
+id=132772896699014299
+symbol=SIEGn.DE
 period=60
 leftpos=1937
-digits=5
+digits=2
 scale=8
 graph=1
 fore=1

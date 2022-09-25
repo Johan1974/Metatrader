@@ -2,7 +2,7 @@
 id=132772896699014294
 symbol=GBPJPY
 period=60
-leftpos=1973
+leftpos=1938
 digits=3
 scale=8
 graph=1
@@ -23,7 +23,7 @@ window_left=0
 window_top=0
 window_right=832
 window_bottom=440
-window_type=1
+window_type=3
 background_color=0
 foreground_color=16777215
 barup_color=65280

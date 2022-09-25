@@ -2,7 +2,7 @@
 id=132772896699014296
 symbol=CARDANO
 period=1
-leftpos=1941
+leftpos=2063
 digits=3
 scale=8
 graph=1

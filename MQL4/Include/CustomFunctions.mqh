@@ -74,15 +74,26 @@ double GetPipValue(string ThisSymbol)
    }
 }
 
-double GetMovingAverage(string ThisSymbol)
+double GetMovingAverage(string ThisSymbol, int ThisPeriod )
 {
    int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
    
-   double ThisIma = iMA(ThisSymbol, PERIOD_CURRENT, 20, 0, MODE_SMA, PRICE_CLOSE, 0);
+   double ThisIma = iMA(ThisSymbol, PERIOD_CURRENT,ThisPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
    
    return NormalizeDouble(ThisIma, TheseDigits);
 
 }
+
+double GetBollingerBand(string ThisSymbol, int ThisPeriod, int ThisDev, int ThisMode )
+{
+   int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
+   
+   double ThisBB = iBands(ThisSymbol,PERIOD_CURRENT, ThisPeriod, ThisDev, 0, PRICE_CLOSE, ThisMode, 0);
+   
+   return NormalizeDouble(ThisBB, TheseDigits);
+
+}
+
 
 
 int GetMagicNumber(string ThisSymbol)
