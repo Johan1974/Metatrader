@@ -1,32 +1,13 @@
 //+------------------------------------------------------------------+
-//|                                            CustomFunctions01.mqh |
-//|                                                    Mohsen Hassan |
-//|                             https://www.MontrealTradingGroup.com |
+//|                                            CustomFunctions.mqh   |
+//|                                                   Johan Lijffijt |
+//|                                                                  |
 //+------------------------------------------------------------------+
-#property copyright "Mohsen Hassan"
-#property link      "https://www.MontrealTradingGroup.com"
+#property copyright "Johan Lijffijt"
+#property link  ""    
 #property strict
-//+------------------------------------------------------------------+
-//| defines                                                          |
-//+------------------------------------------------------------------+
-// #define MacrosHello   "Hello, world!"
-// #define MacrosYear    2010
-//+------------------------------------------------------------------+
-//| DLL imports                                                      |
-//+------------------------------------------------------------------+
-// #import "user32.dll"
-//   int      SendMessageA(int hWnd,int Msg,int wParam,int lParam);
-// #import "my_expert.dll"
-//   int      ExpertRecalculate(int wParam,int lParam);
-// #import
-//+------------------------------------------------------------------+
-//| EX5 imports                                                      |
-//+------------------------------------------------------------------+
-// #import "stdlib.ex5"
-//   string ErrorDescription(int error_code);
-// #import
-//+------------------------------------------------------------------+
 
+int THISTIME = PERIOD_CURRENT;
 
 double CalculateTakeProfit(bool isLong, double entryPrice, int pips)
 {
@@ -57,7 +38,32 @@ double CalculateStopLoss(bool isLong, double entryPrice, int pips)
    return stopLoss;
 }
 
+double GetTradeContractSize(string ThisSymbol)
+{
 
+   return SymbolInfoDouble(ThisSymbol, SYMBOL_TRADE_CONTRACT_SIZE);
+   
+}
+
+int BuyOrder(string ThisSymbol, double CurrentAsk, double StopLoss, double TakeProfit)
+{
+   
+   return OrderSend(ThisSymbol,OP_BUY, 0.01, CurrentAsk, 10, StopLoss, TakeProfit, NULL, GetMagicNumber(ThisSymbol) ) ;
+}
+
+int SellOrder(string ThisSymbol, double CurrentBid, double StopLoss, double TakeProfit)
+{
+   
+   return OrderSend(ThisSymbol,OP_SELL, 0.01, CurrentBid, 10, StopLoss, TakeProfit, NULL, GetMagicNumber(ThisSymbol) ) ;
+}
+
+
+double GetMinimumLot(string ThisSymbol)
+{
+
+   return MarketInfo(ThisSymbol,MODE_MINLOT);
+   
+}
 
 
 double GetPipValue(string ThisSymbol)
@@ -78,17 +84,28 @@ double GetMovingAverage(string ThisSymbol, int ThisPeriod )
 {
    int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
    
-   double ThisIma = iMA(ThisSymbol, PERIOD_CURRENT,ThisPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
+   double ThisIma = iMA(ThisSymbol, THISTIME,ThisPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
    
    return NormalizeDouble(ThisIma, TheseDigits);
 
 }
 
+double GetRSI(string ThisSymbol, int ThisPeriod )
+{
+   int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
+   
+   double ThisRSI = iRSI(ThisSymbol, THISTIME,ThisPeriod, PRICE_CLOSE, 0);
+   
+   return NormalizeDouble(ThisRSI, TheseDigits);
+
+}
+
+
 double GetBollingerBand(string ThisSymbol, int ThisPeriod, int ThisDev, int ThisMode )
 {
    int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
    
-   double ThisBB = iBands(ThisSymbol,PERIOD_CURRENT, ThisPeriod, ThisDev, 0, PRICE_CLOSE, ThisMode, 0);
+   double ThisBB = iBands(ThisSymbol,THISTIME, ThisPeriod, ThisDev, 0, PRICE_CLOSE, ThisMode, 0);
    
    return NormalizeDouble(ThisBB, TheseDigits);
 
@@ -124,29 +141,6 @@ int GetMagicNumber(string ThisSymbol)
 }
 
 
-
-
-void DayOfWeekAlert()
-{
-
-   Alert("");
-   
-   int dayOfWeek = DayOfWeek();
-   
-   switch (dayOfWeek)
-   {
-      case 1 : Alert("We are Monday. Let's try to enter new trades"); break;
-      case 2 : Alert("We are tuesday. Let's try to enter new trades or close existing trades");break;
-      case 3 : Alert("We are wednesday. Let's try to enter new trades or close existing trades");break;
-      case 4 : Alert("We are thursday. Let's try to enter new trades or close existing trades");break;
-      case 5 : Alert("We are friday. Close existing trades");break;
-      case 6 : Alert("It's the weekend. No Trading.");break;
-      case 0 : Alert("It's the weekend. No Trading.");break;
-      default : Alert("Error. No such day in the week.");
-   }
-}
-
-
 double GetStopLossPrice(bool bIsLongPosition, double entryPrice, int maxLossInPips)
 {
    double stopLossPrice;
@@ -166,16 +160,23 @@ bool IsTradingAllowed(string ThisSymbol)
 {
    if(!IsTradeAllowed())
    {
-      //Print("Expert Advisor is NOT Allowed to Trade. Check AutoTrading.");
+      Print("Expert Advisor is NOT Allowed to Trade. Check AutoTrading.");
       return false;
    }
    
    if(!IsTradeAllowed(ThisSymbol, TimeCurrent()))
    {
-      //Print("Trading NOT Allowed for specific Symbol and Time");
+      //Print("Trading NOT Allowed for " + ThisSymbol + " and Time");
+      return false;
+   }
+
+   if(OrdersTotal() > 4 )
+   {
+      //Print("Trading NOT Allowed, Max orders reached");
       return false;
    }
    
+
    return true;
 }
   
