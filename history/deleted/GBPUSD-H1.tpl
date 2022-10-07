@@ -2,7 +2,7 @@
 id=132772896699014294
 symbol=GBPUSD
 period=60
-leftpos=2002
+leftpos=2029
 digits=5
 scale=8
 graph=1
@@ -37,7 +37,7 @@ askline_color=255
 stops_color=255
 
 <window>
-height=100
+height=34
 fixed_height=0
 <indicator>
 name=main
@@ -134,7 +134,7 @@ show_data=1
 </window>
 
 <window>
-height=50
+height=116
 fixed_height=0
 <indicator>
 name=Relative Strength Index

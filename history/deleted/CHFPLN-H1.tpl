@@ -1,10 +1,10 @@
 <chart>
-id=132772896699014297
+id=132772896699014303
 symbol=CHFPLN
 period=60
-leftpos=1968
+leftpos=2032
 digits=5
-scale=8
+scale=16
 graph=1
 fore=1
 grid=0

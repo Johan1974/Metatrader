@@ -1,10 +1,10 @@
 <chart>
-id=132772896699014294
-symbol=SBRY.L
-period=60
-leftpos=1940
-digits=3
-scale=8
+id=132772896699014295
+symbol=BITCOIN
+period=1
+leftpos=16274
+digits=2
+scale=32
 graph=1
 fore=1
 grid=0
@@ -37,7 +37,7 @@ askline_color=255
 stops_color=255
 
 <window>
-height=100
+height=135
 fixed_height=0
 <indicator>
 name=main
@@ -134,7 +134,7 @@ show_data=1
 </window>
 
 <window>
-height=50
+height=29
 fixed_height=0
 <indicator>
 name=Relative Strength Index

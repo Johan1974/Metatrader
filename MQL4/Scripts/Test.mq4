@@ -8,6 +8,8 @@
 #property version   "1.00"
 #property strict
 #include <CustomFunctions.mqh>
+
+
 //+------------------------------------------------------------------+
 //| Script program start function                                    |
 //+------------------------------------------------------------------+
@@ -15,28 +17,24 @@ void OnStart()
   {
 //---
    
-   
-   
+   string ThisSymbol = "DIS.N"; 
 
-   string ThisSymbol = "ZCASH";
+   double entryPrice = 6.968;
+   double stopLoss = 6.96;
+   double pip = 0.01;
+   
+   int maxLossInPips = MathAbs(entryPrice - stopLoss)/GetPipValue(ThisSymbol);
    
    
-   Print ("StopLevel" + StopLevel);    
-       
-   if (IsTradingAllowed(ThisSymbol))
-   {
    
-   Print("******" + ThisSymbol + "******");
-   Print("LotSize " + MarketInfo(ThisSymbol,MODE_MINLOT));
-   Print("TradeContract " + SymbolInfoDouble(ThisSymbol, SYMBOL_TRADE_CONTRACT_SIZE));
-   Print("******" + ThisSymbol + "******");
    
-   Print("****" + ThisSymbol  + "1*****");
-   Print("LotSize " + GetMinimumLot(ThisSymbol));
-   Print("TradeContract " + GetTradeContractSize(ThisSymbol));  
-   Print("****" + ThisSymbol + "1*****");  
    
-   }
-        
-  }
-//+------------------------------------------------------------------+
+   //2022.10.06 02:35:17.887	BB Strategy BITCOIN,M1: GetPipValue 0.01
+   //2022.10.06 02:35:17.887	BB Strategy BITCOIN,M1: stopLoss 6.96
+   //2022.10.06 02:35:17.887	BB Strategy BITCOIN,M1: entryPrice 6.968
+
+
+
+   
+}
+   

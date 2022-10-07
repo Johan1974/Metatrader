@@ -9,34 +9,7 @@
 
 int THISTIME = PERIOD_CURRENT;
 
-double CalculateTakeProfit(bool isLong, double entryPrice, int pips)
-{
-   double takeProfit;
-   if(isLong)
-   {
-      takeProfit = entryPrice + pips * GetPipValue("123");
-   }
-   else
-   {
-      takeProfit = entryPrice - pips * GetPipValue("123");
-   }
-   
-   return takeProfit;
-}
 
-double CalculateStopLoss(bool isLong, double entryPrice, int pips)
-{
-   double stopLoss;
-   if(isLong)
-   {
-      stopLoss = entryPrice - pips * GetPipValue("123");
-   }
-   else
-   {
-      stopLoss = entryPrice + pips * GetPipValue("123");
-   }
-   return stopLoss;
-}
 
 double GetTradeContractSize(string ThisSymbol)
 {
@@ -45,16 +18,23 @@ double GetTradeContractSize(string ThisSymbol)
    
 }
 
-int BuyOrder(string ThisSymbol, double CurrentAsk, double StopLoss, double TakeProfit)
+int BuyOrder(string ThisSymbol, double CurrentAsk, double StopLoss, double TakeProfit, double RiskPerTrade )
 {
+
+   double LotSize = OptimalLotSize(RiskPerTrade, CurrentAsk, StopLoss, ThisSymbol);
    
-   return OrderSend(ThisSymbol,OP_BUY, 0.01, CurrentAsk, 10, StopLoss, TakeProfit, NULL, GetMagicNumber(ThisSymbol) ) ;
+   return OrderSend(ThisSymbol,OP_BUYLIMIT,LotSize, CurrentAsk, 10, StopLoss, TakeProfit ) ;
+
 }
 
-int SellOrder(string ThisSymbol, double CurrentBid, double StopLoss, double TakeProfit)
+
+
+
+int SellOrder(string ThisSymbol, double CurrentBid, double StopLoss, double TakeProfit, double RiskPerTrade)
 {
+   double LotSize = OptimalLotSize(RiskPerTrade, CurrentBid, StopLoss, ThisSymbol);
    
-   return OrderSend(ThisSymbol,OP_SELL, 0.01, CurrentBid, 10, StopLoss, TakeProfit, NULL, GetMagicNumber(ThisSymbol) ) ;
+   return OrderSend(ThisSymbol,OP_SELLLIMIT, LotSize, CurrentBid, 10, StopLoss, TakeProfit) ;
 }
 
 
@@ -68,9 +48,7 @@ double GetMinimumLot(string ThisSymbol)
 
 double GetPipValue(string ThisSymbol)
 {
-
-   int digits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
-   if(digits >=4)
+   if((int)MarketInfo(ThisSymbol,MODE_DIGITS) >=4)
    {
       return 0.0001;
    }
@@ -80,21 +58,23 @@ double GetPipValue(string ThisSymbol)
    }
 }
 
+
+
 double GetMovingAverage(string ThisSymbol, int ThisPeriod )
 {
    int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
    
-   double ThisIma = iMA(ThisSymbol, THISTIME,ThisPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
+   double ThisIma = iMA(ThisSymbol,THISTIME,ThisPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
    
    return NormalizeDouble(ThisIma, TheseDigits);
 
 }
 
-double GetRSI(string ThisSymbol, int ThisPeriod )
+double GetRSI(string ThisSymbol, int ThisPeriod, int Shift )
 {
    int TheseDigits = (int)MarketInfo(ThisSymbol,MODE_DIGITS);
    
-   double ThisRSI = iRSI(ThisSymbol, THISTIME,ThisPeriod, PRICE_CLOSE, 0);
+   double ThisRSI = iRSI(ThisSymbol, THISTIME,ThisPeriod, PRICE_CLOSE, Shift);
    
    return NormalizeDouble(ThisRSI, TheseDigits);
 
@@ -140,33 +120,24 @@ int GetMagicNumber(string ThisSymbol)
 
 }
 
-
-double GetStopLossPrice(bool bIsLongPosition, double entryPrice, int maxLossInPips)
-{
-   double stopLossPrice;
-   if (bIsLongPosition)
-   {
-      stopLossPrice = entryPrice - maxLossInPips * 0.0001;
-   }
-   else
-   {
-      stopLossPrice = entryPrice + maxLossInPips * 0.0001;
-   }
-   return stopLossPrice;
-}
-
-
 bool IsTradingAllowed(string ThisSymbol)
 {
+   
    if(!IsTradeAllowed())
    {
-      Print("Expert Advisor is NOT Allowed to Trade. Check AutoTrading.");
+      Print("Expert Advisor is NOT Allowed to Trade. Check AutoTrading. " + ThisSymbol);
       return false;
    }
    
    if(!IsTradeAllowed(ThisSymbol, TimeCurrent()))
    {
-      //Print("Trading NOT Allowed for " + ThisSymbol + " and Time");
+      //Print("Trading Not Allowed for " + ThisSymbol + " and Time");
+      return false;
+   }
+
+   if (DoubleTrade(ThisSymbol)) 
+   {
+      //Print("Symbol " + ThisSymbol + " allready in order.");
       return false;
    }
 
@@ -175,64 +146,73 @@ bool IsTradingAllowed(string ThisSymbol)
       //Print("Trading NOT Allowed, Max orders reached");
       return false;
    }
-   
-
+     
    return true;
 }
   
+bool DoubleTrade(string ThisSymbol)
+{
+   string SelectSymbol;
+   
+   for (int i= 0; i < OrdersTotal(); i++)
+   {
+     
+     
+     if(OrderSelect(i, SELECT_BY_POS)==true)
+     {
+      
+      if (ThisSymbol == OrderSymbol())
+      {
+        return true; 
+      }
+     }
+     
+   } 
+   return false;
+   
+}  
   
-double OptimalLotSize(double maxRiskPrc, int maxLossInPips)
+  
+double OptimalLotSize(double maxRiskPrc, int maxLossInPips, string ThisSymbol)
 {
 
+  
   double accEquity = AccountEquity();
-  Print("accEquity: " + accEquity);
   
-  double lotSize = MarketInfo(NULL,MODE_LOTSIZE);
-  Print("lotSize: " + lotSize);
+  double lotSize = MarketInfo(ThisSymbol,MODE_LOTSIZE);
   
-  double tickValue = MarketInfo(NULL,MODE_TICKVALUE);
+  double tickValue = MarketInfo(ThisSymbol,MODE_TICKVALUE);
   
-  if(Digits <= 3)
+  
+  if(MarketInfo(ThisSymbol,MODE_DIGITS ) <= 3)
   {
    tickValue = tickValue /100;
+   
   }
   
-  Print("tickValue: " + tickValue);
   
   double maxLossDollar = accEquity * maxRiskPrc;
-  Print("maxLossDollar: " + maxLossDollar);
-  
+   
   double maxLossInQuoteCurr = maxLossDollar / tickValue;
-  Print("maxLossInQuoteCurr: " + maxLossInQuoteCurr);
-  
-  double optimalLotSize = NormalizeDouble(maxLossInQuoteCurr /(maxLossInPips * GetPipValue("123"))/lotSize,2);
+   
+  double optimalLotSize = NormalizeDouble(maxLossInQuoteCurr /(maxLossInPips * GetPipValue( ThisSymbol))/lotSize,2);
   
   return optimalLotSize;
  
 }
 
 
-double OptimalLotSize(double maxRiskPrc, double entryPrice, double stopLoss)
+double OptimalLotSize(double maxRiskPrc, double entryPrice, double stopLoss, string ThisSymbol)
 {
-   int maxLossInPips = MathAbs(entryPrice - stopLoss)/GetPipValue("123");
-   return OptimalLotSize(maxRiskPrc,maxLossInPips);
-}
 
-
-
-bool CheckIfOpenOrdersByMagicNB(int magicNB)
-{
-   int openOrders = OrdersTotal();
+   int maxLossInPips = MathAbs(entryPrice - stopLoss)/GetPipValue(ThisSymbol);
    
-   for(int i = 0; i < openOrders; i++)
+   if (maxLossInPips == 0) 
    {
-      if(OrderSelect(i,SELECT_BY_POS)==true)
-      {
-         if(OrderMagicNumber() == magicNB) 
-         {
-            return true;
-         }  
-      }
-   }
-   return false;
+      maxLossInPips = 1;
+   } 
+   
+   return OptimalLotSize(maxRiskPrc,maxLossInPips, ThisSymbol);
 }
+
+

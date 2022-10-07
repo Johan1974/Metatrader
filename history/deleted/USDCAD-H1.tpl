@@ -1,10 +1,10 @@
 <chart>
-id=132772896699014299
+id=132772896699014294
 symbol=USDCAD
 period=60
-leftpos=2055
+leftpos=2109
 digits=5
-scale=16
+scale=32
 graph=1
 fore=1
 grid=0
