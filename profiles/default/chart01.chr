@@ -1,9 +1,9 @@
 <chart>
-id=132772896699014295
-symbol=BITCOIN
+id=132772896699014296
+symbol=BITCOINGOLD
 period=1
-leftpos=18537
-digits=2
+leftpos=25927
+digits=3
 scale=32
 graph=1
 fore=1

@@ -16,15 +16,48 @@
 void OnStart()
   {
 //---
-   
-   string ThisSymbol = "DIS.N"; 
 
-   double entryPrice = 6.968;
-   double stopLoss = 6.96;
-   double pip = 0.01;
+//
+double CurrentBid;
+double CurrentAsk;
+double CurrentPoint;
+double CurrentLotSize;
+double CurrentLotMin;
+double CurrentLotStep;
+double CurrentLotMax;
+double CurrentDigits;       
+int CurrentStopLevel;
+
    
-   int maxLossInPips = MathAbs(entryPrice - stopLoss)/GetPipValue(ThisSymbol);
+   string ThisSymbol = "EURUSD"; 
+
    
+   CurrentDigits    = MarketInfo(ThisSymbol,MODE_DIGITS );   
+   CurrentBid       = NormalizeDouble( MarketInfo(ThisSymbol,MODE_BID),CurrentDigits);
+   CurrentAsk       = NormalizeDouble( MarketInfo(ThisSymbol,MODE_ASK),CurrentDigits);
+   CurrentPoint     = NormalizeDouble( MarketInfo(ThisSymbol,MODE_POINT),CurrentDigits);
+   CurrentLotSize   = NormalizeDouble( MarketInfo(ThisSymbol,MODE_LOTSIZE ),CurrentDigits);
+   CurrentLotMin    = NormalizeDouble( MarketInfo(ThisSymbol,MODE_MINLOT ),CurrentDigits);
+   CurrentLotStep   = NormalizeDouble( MarketInfo(ThisSymbol,MODE_LOTSTEP ),CurrentDigits);
+   CurrentLotMax    = NormalizeDouble( MarketInfo(ThisSymbol,MODE_MAXLOT ),CurrentDigits);
+   CurrentStopLevel =  (int)MarketInfo(ThisSymbol, MODE_STOPLEVEL);
+  
+  Alert("**********");
+  Alert("_Point " + _Point);
+  Alert("CurrentPoint " + CurrentPoint);
+  Alert("CurrentStopLevel " + CurrentStopLevel);
+  Alert("StopLevel * _Point" + CurrentStopLevel * CurrentPoint);
+  
+  //if (CurrentAsk - Entry < StopLevel * _Point) Entry = Ask - StopLevel * _Point;
+         
+  
+  
+  
+  Alert("Ask " + Ask);
+  Alert("CurrentBid" + CurrentBid);
+  Alert("CurrentAsk" + CurrentAsk);
+  Alert("**********");
+  
    
    
    

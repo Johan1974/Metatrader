@@ -86,8 +86,8 @@ void OnDeinit(const int reason)
 void OnTick()
   {
 //---
-      //Only symbols in marketwatch
-      for(int SymInt=0;SymInt<SymbolsTotal(true);SymInt++)
+      //Only symbols in marketwatch = true
+      for(int SymInt=0;SymInt<SymbolsTotal(false);SymInt++)
    {
       
       
@@ -96,8 +96,8 @@ void OnTick()
       if (IsTradingAllowed(ThisSymbol))
       {
       
-       Print("*** Checking : " + ThisSymbol + "***********************");
-       
+        // Print("*** Checking : " + ThisSymbol + "***********************");
+         
        CurrentDigits    = MarketInfo(ThisSymbol,MODE_DIGITS );   
        CurrentBid       = NormalizeDouble( MarketInfo(ThisSymbol,MODE_BID),CurrentDigits);
        CurrentAsk       = NormalizeDouble( MarketInfo(ThisSymbol,MODE_ASK),CurrentDigits);
@@ -146,13 +146,19 @@ void OnTick()
          
          StopLossPrice  = ThisBBLower2; 
          TakeProfitPrice = ThisBBMain;
-         
+   
          int OrderID = BuyOrder(ThisSymbol, CurrentAsk, StopLossPrice, TakeProfitPrice, RiskPerTrade); 
-       
+         
          if (OrderID < 0) 
          {
            
+            Print("************************************");
             Print("Buy Order rejected for " + ThisSymbol + ". Order Error " + GetLastError());
+            Print("MODE_LOTSIZE = ", MarketInfo(ThisSymbol, MODE_LOTSIZE));
+            Print("MODE_MINLOT = ", MarketInfo(ThisSymbol, MODE_MINLOT));
+            Print("MODE_LOTSTEP = ", MarketInfo(ThisSymbol, MODE_LOTSTEP));
+            Print("MODE_MAXLOT = ", MarketInfo(ThisSymbol, MODE_MAXLOT));
+            Print("************************************");
             
          }
          else
@@ -173,16 +179,20 @@ void OnTick()
          StopLossPrice = ThisBBUpper2;
          TakeProfitPrice = ThisBBMain;
                  
-         
-         
+        
          int OrderID = SellOrder(ThisSymbol, CurrentBid,StopLossPrice, TakeProfitPrice, RiskPerTrade);
          
          if (OrderID < 0) 
          {
             
             
+            Print("************************************");
             Print("Sell Order rejected for " + ThisSymbol + ". Order Error " + GetLastError());
-            
+            Print("MODE_LOTSIZE = ", MarketInfo(ThisSymbol, MODE_LOTSIZE));
+            Print("MODE_MINLOT = ", MarketInfo(ThisSymbol, MODE_MINLOT));
+            Print("MODE_LOTSTEP = ", MarketInfo(ThisSymbol, MODE_LOTSTEP));
+            Print("MODE_MAXLOT = ", MarketInfo(ThisSymbol, MODE_MAXLOT));
+            Print("************************************");
          
          }
          else

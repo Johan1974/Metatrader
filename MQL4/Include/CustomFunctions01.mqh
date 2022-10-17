@@ -108,6 +108,31 @@ double GetStopLossPrice(bool bIsLongPosition, double entryPrice, int maxLossInPi
    return stopLossPrice;
 }
 
+bool DoubleTrade(string ThisSymbol)
+{
+   string SelectSymbol;
+   
+   for (int i= 0; i < OrdersTotal(); i++)
+   {
+     
+     if(OrderSelect(i, SELECT_BY_POS)==true)
+     {
+      
+      if (ThisSymbol == OrderSymbol())
+      {
+        Print ("Double Trade " + ThisSymbol  );
+        return true; 
+      }
+     }
+     
+   } 
+   Print ("Not a Double Trade " + ThisSymbol  );
+   return false;
+   
+}  
+
+
+
 
 bool IsTradingAllowed(string ThisSymbol)
 {
@@ -118,43 +143,32 @@ bool IsTradingAllowed(string ThisSymbol)
       return false;
    }
    
+   
+   
+   
    if(!IsTradeAllowed(ThisSymbol, TimeCurrent()))
    {
-      //Print("Trading Not Allowed for " + ThisSymbol + " and Time");
+      Print("Trading Not Allowed for " + ThisSymbol + " and Time");
       return false;
    }
 
-   if(OrdersTotal() > 4 )
-   {
-      Print("Trading NOT Allowed, Max orders reached");
-      return false;
-   }
+//   if (DoubleTrade(ThisSymbol)) 
+//   {
+//      //Print("Symbol " + ThisSymbol + " allready in order.");
+//      return false;
+//   }
+
+   //if(OrdersTotal() > 4 )
+   //{
+   //   //Print("Trading NOT Allowed, Max orders reached");
+   //   return false;
+   //}
      
    return true;
-}
-  
-bool DoubleTrade(string ThisSymbol)
-{
-
-   for (int i= 0; i < OrdersTotal(); i++)
-   {
-     //Print ("******");
-     //Print ("OrdersTotal " +  OrdersTotal());
-     if(OrderSelect(i, SELECT_BY_POS)==true)
-     {
-      //Print ("ThisSymbol   " + i +  ThisSymbol);
-      //Print ("OrderSymbol  " + i + OrderSymbol());   
-      if (ThisSymbol == OrderSymbol())
-      {
-        return true; 
-      }
-     }
-     //Print ("******"); 
-   } 
-   return false;
-   
 }  
-  
+
+
+
   
 double OptimalLotSize(double maxRiskPrc, int maxLossInPips, string ThisSymbol)
 {
@@ -177,8 +191,23 @@ double OptimalLotSize(double maxRiskPrc, int maxLossInPips, string ThisSymbol)
   double maxLossDollar = accEquity * maxRiskPrc;
   Print("maxLossDollar: " + maxLossDollar);
   
+  if (tickValue == 0)
+  {
+   tickValue = 1;
+  } 
+  
   double maxLossInQuoteCurr = maxLossDollar / tickValue;
-  Print("maxLossInQuoteCurr: " + maxLossInQuoteCurr);
+  
+  if (maxLossInPips == 0)
+  {
+   maxLossInPips = 1;
+  } 
+  
+  if (lotSize == 0)
+  {
+   lotSize = 1;
+  } 
+  
   
   double optimalLotSize = NormalizeDouble(maxLossInQuoteCurr /(maxLossInPips * GetPipValue())/lotSize,2);
   

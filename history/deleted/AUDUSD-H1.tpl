@@ -1,10 +1,10 @@
 <chart>
-id=132772896699014302
+id=132772896699014295
 symbol=AUDUSD
 period=60
-leftpos=2044
+leftpos=2363
 digits=5
-scale=8
+scale=32
 graph=1
 fore=1
 grid=0
@@ -37,7 +37,7 @@ askline_color=255
 stops_color=255
 
 <window>
-height=118
+height=135
 fixed_height=0
 <indicator>
 name=main
@@ -134,7 +134,7 @@ show_data=1
 </window>
 
 <window>
-height=32
+height=29
 fixed_height=0
 <indicator>
 name=Relative Strength Index
